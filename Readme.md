@@ -38,7 +38,7 @@ fight, print out a message like:
 - All the cities will have unique names
 - All the aliens will have unique names  
 - There is a buffer zone(roads) taken by alien to move from one city to next city, any number of aliens can be present at the same time in that buffer zone
-- As spawing of aliens are random there are situation where multiple aliens are swapned in the same city at the same time 
+- As spawing of aliens are random there are situation where multiple aliens are spawned in the same city at the same time 
 > Note : this is a non deterministic system as all the moves made by the aliens are at random
 
 ## Special condition 
