@@ -49,7 +49,7 @@ In the next move alien2 will move to city1 and alien1 moves to city2, this happe
 
 
 ### Command line Instructions  
-- to see all the flags
+- to see all the flags and options available in cli
     >```
     >go run . --help
     >```
