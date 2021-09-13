@@ -74,6 +74,8 @@ In the next move alien2 will move to city1 and alien1 moves to city2, this happe
     >```
     >go test ./... -v
     >```
+- output (which cities are still surviving) is generated in default folder location in files/output.txt but can be changed using the cli command
+- output such as number of aliens, cities remaining etc, is also displayed in terminal
 
 ### to do 
 - [ ] determenistic simulation using seed value provided by user
