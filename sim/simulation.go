@@ -90,7 +90,7 @@ func (s *Simulation) Move(a *types.Alien, verbose bool) error {
 	}
 	if a.CurrentCity == nil {
 		a.InvadeCity(s.PickStartCity())
-		fmt.Printf("Alien %s spanned in city %s\n", a.Name, a.CurrentCity.Name)
+		fmt.Printf("Alien %s spawned in city %s\n", a.Name, a.CurrentCity.Name)
 		return nil
 		// if there is no area for the new alien to start
 	}
