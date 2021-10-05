@@ -37,9 +37,16 @@ fight, print out a message like:
 ## Assumptions
 - All the cities will have unique names
 - All the aliens will have unique names  
+- There is no buffer period or time taken by alien to move from one city to next city, each move made by aliens are instantenous
 
 > Note : this is a non deterministic system as all the moves made by the aliens are at random
 
+## Special condition 
+#### In some cases like for example 
+- city1 north=city2
+>alien 1 is spanned in city1 and alien 2 is spanned in city2 
+In the next move alien2 will move to city1 and alien1 moves to city2 
+this is the special case as we assume that there is no travel or buffer time between movements of aliens so in this scenario there we be no such situation that alien1 and alien2 are present in both the cities at the same time. The  moves made by aliens will be instantaneous
 
 
 ### Command line Instructions  
