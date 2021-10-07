@@ -58,10 +58,10 @@ fight, print out a message like:
     >go run . -alienname files/sample_alien_name.txt -totalalien 3 -verbose true      
     >```
 
-explanation :
-> - -alienname : path for sample name of the aliens
-> - -totalalien N: total N alien are generated in simulation
-> - -verbose true : prints useful information like current iteration number > and    moves made by aliens in each iteration
+    explanation :
+    > - -alienname : path for sample name of the aliens
+    > - -totalalien N: total N alien are generated in simulation
+    > - -verbose true : prints useful information like current iteration number >   and    moves made by aliens in each iteration
 
 
 - Run all tests at once 
