@@ -38,6 +38,8 @@ fight, print out a message like:
 - All the cities will have unique names
 - All the aliens will have unique names  
 
+> Note : this is a non deterministic system as all the moves made by the aliens are at random
+
 
 
 ### Command line Instructions  
@@ -55,6 +57,12 @@ fight, print out a message like:
     >```
     >go run . -alienname files/sample_alien_name.txt -totalalien 3 -verbose true      
     >```
+
+explanation :
+> - -alienname : path for sample name of the aliens
+> - -totalalien N: total N alien are generated in simulation
+> - -verbose true : prints useful information like current iteration number > and    moves made by aliens in each iteration
+
 
 - Run all tests at once 
     >```
