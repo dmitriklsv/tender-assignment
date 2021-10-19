@@ -55,3 +55,13 @@ fight, print out a message like:
     >```
     >go run . -alienname files/sample_alien_name.txt -totalalien 3 -verbose true      
     >```
+
+- Run all tests at once 
+    >```
+    >go test ./... -v
+    >```
+
+### to do 
+- [ ] determenistic simulation using seed value provided by user
+- [ ] coverage report for code base 
+- [ ] more unit tests
