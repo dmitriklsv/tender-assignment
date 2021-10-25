@@ -1,3 +1,1 @@
-node1 south=node2
-node2 north=node1 east=node3
-node3 west=node2
+node1

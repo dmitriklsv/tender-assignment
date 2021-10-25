@@ -36,6 +36,22 @@ fight, print out a message like:
 
 ## Assumptions
 - All the cities will have unique names
-- All the aliens will have unique names
+- All the aliens will have unique names  
 
 
+
+### Command line Instructions  
+- to see all the flags
+    >```
+    >go run . --help
+    >```
+
+- default configuration run 
+    - generates 10 random aliens in random cities, 10000 max iterations in simulation 
+        >```
+        >go run .
+        >```
+- sample command
+    >```
+    >go run . -alienname files/sample_alien_name.txt -totalalien 3 -verbose true      
+    >```
