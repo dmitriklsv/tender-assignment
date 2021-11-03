@@ -50,7 +50,9 @@ func (s *Simulation) StartSimulation(verbose bool) error {
 	fmt.Println("starting simulation")
 	fmt.Println("---------------------")
 	for ; s.Iterations < s.MaxIterations; s.Iterations++ {
-		fmt.Printf("\nCurrent iteration : %d\n", s.Iterations)
+		if verbose {
+			fmt.Printf("\nCurrent iteration : %d\n", s.Iterations)
+		}
 		if s.AliensDead+s.AliensTrapped == len(s.Aliens) {
 			break
 		}
