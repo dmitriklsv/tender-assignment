@@ -43,6 +43,9 @@ func (c *City) ConnectCity(direction string, toCity *City) error {
 	// helps in generating the map
 
 	// check to ensure that the city that we are connected to is not destroyed
+	if toCity.Name == c.Name {
+		return errors.New("self Loop is not allowed")
+	}
 	if toCity.IfDestroyed() {
 		return errors.New("City is destroyed")
 	}
