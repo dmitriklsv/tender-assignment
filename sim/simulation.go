@@ -134,13 +134,14 @@ func (s *Simulation) PickStartCity() *types.City {
 			Indexes = append(Indexes, i)
 		}
 	}
+
 	randomIndex := rand.Intn(len(Indexes))
 
 	return s.Cities[Indexes[randomIndex]]
 }
 
 func (s *Simulation) FinalOutcome() {
-	fmt.Printf("Total Aliens Dead %d | Total Aliens Trapped %d | Total Aliens Survided %d\n", s.AliensDead, s.AliensTrapped, len(s.Aliens)-s.AliensDead)
+	fmt.Printf("Total Aliens Dead %d | Total Aliens Trapped %d | Total Aliens Survived %d\n", s.AliensDead, s.AliensTrapped, len(s.Aliens)-s.AliensDead)
 	fmt.Println("\n-----------------------------\n")
 	for _, city := range s.Cities {
 		if city.IfDestroyed() {

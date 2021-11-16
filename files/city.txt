@@ -1,6 +1,4 @@
-Foo north=Bar west=Baz south=Qu-ux
-Bar south=Foo west=Bee north=Lee
-Lee north=Yee west=Loo
-Mee north=Yoo west=Poo 
-Poo
-panda
+node1 south=node2
+node2 east=node3
+node3 north=node4
+node4 west=node1
