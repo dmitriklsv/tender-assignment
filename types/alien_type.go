@@ -2,11 +2,17 @@ package types
 
 import "errors"
 
+// Alien structure contains
+// name : unique name of the alien
+// CurrentCity: reference to the city the alien is in
+// trapped : is the alien in a city that has no other connections
+// dead : is the alien destroyed during combat
+
 type Alien struct {
 	Name        string
 	CurrentCity *City
-	Trapped     bool
-	Dead        bool
+	trapped     bool
+	dead        bool
 }
 
 func InitAlien(name string) Alien {
@@ -15,36 +21,45 @@ func InitAlien(name string) Alien {
 	newAlien := Alien{
 		Name:        name,
 		CurrentCity: nil,
-		Dead:        false,
-		Trapped:     false,
+		dead:        false,
+		trapped:     false,
 	}
 	return newAlien
 
 }
 
+// invade a new city
 func (a *Alien) InvadeCity(city *City) error {
+	// error if the city that the alien is going to that is going to be destroyed
 	if city.IfDestroyed() {
 		return errors.New("this city has already been destroyed")
 	}
+	// if the alien moves from one city to another then delete
+	// the alien from the currentCity map that tracks the alien that are present in the city
+
 	if a.CurrentCity != nil {
 		delete(a.CurrentCity.AlienPresent, a.Name)
 	}
+	// change the current city and add the alien to the city map for keeping track
 	a.CurrentCity = city
 	city.AlienPresent[a.Name] = a
 	return nil
 }
 
+// getter and setter for trap status
 func (a *Alien) IsTrapped() bool {
-	return a.Trapped
+	return a.trapped
 }
 func (a *Alien) Trap() {
-	a.Trapped = true
+	a.trapped = true
 }
 
+// getter and setter for checking if the alien is alive or dead
+
 func (a *Alien) IsDead() bool {
-	return a.Dead
+	return a.dead
 }
 func (a *Alien) Kill() {
-	a.Dead = true
+	a.dead = true
 
 }

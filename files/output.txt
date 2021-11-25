@@ -1,5 +1,10 @@
-Foo
+Baz east=Foo
+Qu-ux north=Foo
+Lee west=Loo north=Yee
+Loo east=Lee
+Mee north=Yoo west=Poo
+Foo south=Qu-ux west=Baz
 Bee
-Lee
-Mee west=Poo
+Yee south=Lee
+Yoo south=Mee
 Poo east=Mee

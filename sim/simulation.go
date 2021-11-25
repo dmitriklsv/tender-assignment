@@ -7,23 +7,33 @@ import (
 	"github.com/dixitaniket/tender-assignment/types"
 )
 
-// collection of all aliens
+// list of all aliens for the simulation
 type Aliens []*types.Alien
 
-// collection of all the cities
+// list of all the cities
 type Cities []*types.City
 
 // embedding aliens and cities type in simulation type
 // simulation struct is generated at the start of each simulation run
+
+// Simulation structure
+// Iterations: current iterations
+// MaxIterations: max number of iterations that are allowed in simulation
+// AliensDead: Number of aliens that are dead
+// AliensTrapped: Number of aliens that are trapped
+// Aliens: list of the aliens
+// Cities: list of the cities that are present in the simulation
+
 type Simulation struct {
 	Iterations    int
 	MaxIterations int
-	Aliens
-	Cities
 	AliensDead    int
 	AliensTrapped int
+	Aliens
+	Cities
 }
 
+// generate the new simulation
 func InitNewSimulation(aliens Aliens, cities Cities, maxIterations int) Simulation {
 	return Simulation{
 		Iterations:    0,
@@ -44,6 +54,7 @@ func (s *Simulation) StartSimulation(verbose bool) error {
 		if s.AliensDead+s.AliensTrapped == len(s.Aliens) {
 			break
 		}
+		// iterate through all the aliens and update there state
 		for i := range s.Aliens {
 			alien := s.Aliens[i]
 			err := s.Move(alien, verbose)
@@ -52,6 +63,7 @@ func (s *Simulation) StartSimulation(verbose bool) error {
 			}
 
 		}
+		// iterate through all the cities and check if a city has more then 2 aliens then destroy that city
 		for cityIndex := range s.Cities {
 			city := s.Cities[cityIndex]
 			if city.IfDestroyed() {
