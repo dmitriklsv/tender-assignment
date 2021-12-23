@@ -20,6 +20,8 @@ type Simulation struct {
 	MaxIterations int
 	Aliens
 	Cities
+	AliensDead    int
+	AliensTrapped int
 }
 
 func InitNewSimulation(aliens Aliens, cities Cities, maxIterations int) Simulation {
@@ -28,19 +30,23 @@ func InitNewSimulation(aliens Aliens, cities Cities, maxIterations int) Simulati
 		MaxIterations: maxIterations,
 		Aliens:        aliens,
 		Cities:        cities,
+		AliensDead:    0,
+		AliensTrapped: 0,
 	}
 }
 
 // for every iteration aliens make there move and then we check what cities are destoryed and which aliens are dead or trapped
-func (s *Simulation) StartSimulation() error {
+func (s *Simulation) StartSimulation(verbose bool) error {
 	fmt.Println("starting simulation")
 	fmt.Println("---------------------")
 	for ; s.Iterations < s.MaxIterations; s.Iterations++ {
-		fmt.Printf("Current iteration : %d\n", s.Iterations)
-
+		fmt.Printf("\nCurrent iteration : %d\n", s.Iterations)
+		if s.AliensDead+s.AliensTrapped == len(s.Aliens) {
+			break
+		}
 		for i := range s.Aliens {
 			alien := s.Aliens[i]
-			err := s.Move(alien)
+			err := s.Move(alien, verbose)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -54,33 +60,34 @@ func (s *Simulation) StartSimulation() error {
 			// fmt.Println(len(city.AlienPresent))
 
 			if len(city.AlienPresent) >= 2 {
+				s.AliensDead += len(city.AlienPresent)
 				city.DestoryCity()
 			}
 		}
 	}
+	fmt.Printf("Simulation ended at iteration :%d\n\n", s.Iterations)
 	return nil
 }
 
-func (s *Simulation) Move(a *types.Alien) error {
+func (s *Simulation) Move(a *types.Alien, verbose bool) error {
 	// this would happen in the first iteration when we are
-	if a.CurrentCity == nil {
-		a.CurrentCity = s.PickStartCity()
-		// if there is no area for the new alien to start
-	}
-
-	if a.IsDead() {
+	if a.IsDead() || a.IsTrapped() {
 		return nil
+	}
+	if a.CurrentCity == nil {
+		a.InvadeCity(s.PickStartCity())
+		fmt.Printf("Alien %s spanned in city %s\n", a.Name, a.CurrentCity.Name)
+		return nil
+		// if there is no area for the new alien to start
 	}
 
 	newcity := s.PickNextMove(a)
 	if newcity == nil {
-		if a.IsTrapped() {
-			return nil
-
-		}
-
+		return nil
 	}
-	// fmt.Printf("alien %s moves from city %s to city %s \n", a.Name, a.CurrentCity.Name, newcity.Name)
+	if verbose {
+		fmt.Printf("alien %s moves from city %s to city %s\n", a.Name, a.CurrentCity.Name, newcity.Name)
+	}
 	err := a.InvadeCity(newcity)
 	if err != nil {
 		return err
@@ -101,6 +108,7 @@ func (s *Simulation) PickNextMove(a *types.Alien) *types.City {
 	}
 	if len(directions) == 0 {
 		a.Trap()
+		s.AliensTrapped += 1
 		return nil
 	}
 	index := rand.Intn(len(directions))
@@ -114,26 +122,27 @@ func (s *Simulation) PickStartCity() *types.City {
 			Indexes = append(Indexes, i)
 		}
 	}
-	if len(Indexes) == 0 {
-		return nil
-	}
 	randomIndex := rand.Intn(len(Indexes))
 
 	return s.Cities[Indexes[randomIndex]]
 }
 
 func (s *Simulation) FinalOutcome() {
+	fmt.Printf("Total Aliens Dead %d | Total Aliens Trapped %d | Total Aliens Survided %d\n", s.AliensDead, s.AliensTrapped, len(s.Aliens)-s.AliensDead)
+	fmt.Println("\n-----------------------------\n")
 	for _, city := range s.Cities {
 		if city.IfDestroyed() {
 			msg := "City " + city.Name + " was destroyed by: "
 			for alienName := range city.AlienPresent {
-				msg += alienName + " "
+				msg += alienName + ", "
 			}
-			fmt.Println(msg)
+			fmt.Println(msg[:len(msg)-2])
 		} else {
 			fmt.Printf("City %s is safe\n", city.Name)
 		}
 	}
+
+	fmt.Println("\n-----------------------------\n")
 	for _, Alien := range s.Aliens {
 		if Alien.IsDead() {
 			fmt.Printf("Alien %s is dead\n", Alien.Name)

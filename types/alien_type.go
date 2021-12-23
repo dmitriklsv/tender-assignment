@@ -23,9 +23,11 @@ func InitAlien(name string) Alien {
 }
 
 func (a *Alien) InvadeCity(city *City) error {
-	delete(a.CurrentCity.AlienPresent, a.Name)
 	if city.IfDestroyed() {
 		return errors.New("this city has already been destroyed")
+	}
+	if a.CurrentCity != nil {
+		delete(a.CurrentCity.AlienPresent, a.Name)
 	}
 	a.CurrentCity = city
 	city.AlienPresent[a.Name] = a

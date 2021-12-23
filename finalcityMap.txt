@@ -1,9 +1,0 @@
-Yee
-Loo
-Yoo south=Mee
-Baz
-Qu-ux
-Bee east=Bar
-Bar west=Bee north=Lee
-Mee west=Poo north=Yoo
-Poo

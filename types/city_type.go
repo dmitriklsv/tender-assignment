@@ -2,12 +2,13 @@ package types
 
 import (
 	"errors"
+	"fmt"
 )
 
 // complementary compass to find the direction of links
 // ex : a lies in north of b
 // using complimentary directions to map > b lies in south of a
-var ComplementaryDirections = map[string]string{
+var OppositeDirections = map[string]string{
 	"north": "south",
 	"south": "north",
 	"east":  "west",
@@ -22,6 +23,7 @@ type City struct {
 }
 
 func InitCity(name string) City {
+	// generates a new city with a given name
 	return City{
 		Name:         name,
 		Links:        make(map[string]*City),
@@ -31,8 +33,14 @@ func InitCity(name string) City {
 }
 
 func (c *City) ConnectCity(direction string, toCity *City) error {
+	// connects a exisiting city to a new city in a given direction
 	if toCity.IfDestroyed() {
 		return errors.New("City is destroyed")
+	}
+	if c.Links[direction] != nil {
+		if c.Links[direction].Name != toCity.Name {
+			return fmt.Errorf("Link between city %s and city %s in direction %s already exist", c.Name, c.Links[direction].Name, direction)
+		}
 	}
 	c.Links[direction] = toCity
 	return nil
@@ -51,7 +59,7 @@ func (c *City) DestoryCity() {
 		alien.Kill()
 	}
 	for direction := range c.Links {
-		delete(c.Links[direction].Links, ComplementaryDirections[direction])
+		delete(c.Links[direction].Links, OppositeDirections[direction])
 	}
 
 	c.Status = true

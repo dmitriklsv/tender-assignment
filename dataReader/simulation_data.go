@@ -2,15 +2,17 @@ package dataReader
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/dixitaniket/tender-assignment/sim"
 	"github.com/dixitaniket/tender-assignment/types"
 )
 
-var ComplementaryDirections = types.ComplementaryDirections
+var OppositeDirections = types.OppositeDirections
 
 // helps in updating the city connections
 
@@ -28,13 +30,17 @@ func readCityData(path string) (*sim.Cities, error) {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		newline := strings.Split(scanner.Text(), " ")
+		// reads a new line from the file ,each new line contains name of the city and other cities to which it is connected
+		newline := strings.Split(strings.TrimSpace(scanner.Text()), " ")
 		cityName := newline[0]
-		city := types.InitCity(cityName)
+		var city types.City
+		if cityNameMapper[cityName] != nil {
+			city = *cityNameMapper[cityName]
+		} else {
+			city = types.InitCity(cityName)
+		}
 		// situation where there a city is isolated in itself and there are no further connections
 		if len(newline) == 1 {
-			cityNameMapper[cityName] = &city
-
 			continue
 		}
 		for _, dircity := range newline[1:] {
@@ -42,14 +48,23 @@ func readCityData(path string) (*sim.Cities, error) {
 			data := strings.Split(dircity, "=")
 			if cityNameMapper[data[1]] != nil {
 				// means the city is already been loaded into memory before
-				city.ConnectCity(data[0], cityNameMapper[data[1]])
-				cityNameMapper[data[1]].ConnectCity(ComplementaryDirections[data[0]], &city)
+				if err := city.ConnectCity(data[0], cityNameMapper[data[1]]); err != nil {
+					return nil, err
+				}
+				if err := cityNameMapper[data[1]].ConnectCity(OppositeDirections[data[0]], &city); err != nil {
+					return nil, err
+				}
 				cityNameMapper[cityName] = &city
 			} else {
 				// new city present in the direction is also not loaded into memory
 				newcity := types.InitCity(data[1])
-				city.ConnectCity(data[0], &newcity)
-				newcity.ConnectCity(ComplementaryDirections[data[0]], &city)
+				if err := city.ConnectCity(data[0], &newcity); err != nil {
+					return nil, err
+				}
+				if err := newcity.ConnectCity(OppositeDirections[data[0]], &city); err != nil {
+					return nil, err
+				}
+
 				cityNameMapper[newcity.Name] = &newcity
 				cityNameMapper[cityName] = &city
 			}
@@ -84,8 +99,41 @@ func ReadCityData(path string) (*sim.Cities, error) {
 
 }
 
+func ReadAlienNames(path string, N uint64) (*sim.Aliens, error) {
+	// if path is none then generate random alien names
+	aliens := sim.Aliens{}
+	if path == "" {
+		for i := uint64(0); i < N; i++ {
+			newAlien := types.InitAlien("alien" + strconv.FormatUint(i, 10))
+			fmt.Printf("New Alient %s generated\n", newAlien.Name)
+			aliens = append(aliens, &newAlien)
+		}
+	} else {
+		f, err := os.Open(path)
+		defer f.Close()
+		if err != nil {
+			return nil, err
+		}
+		scanner := bufio.NewScanner(f)
+
+		for i := uint64(0); i < N; i++ {
+			if !scanner.Scan() {
+				return nil, errors.New("total aliens less then the names provided in file")
+			}
+			alienName := scanner.Text()
+			newAlien := types.InitAlien(alienName)
+			fmt.Printf("New Alien %s generated\n", newAlien.Name)
+			aliens = append(aliens, &newAlien)
+		}
+
+	}
+	fmt.Println("---------------")
+	return &aliens, nil
+
+}
+
 // writes the final map into a txt file specificed by the output file path
-func FileOutcome(s *sim.Simulation, outputFilePath string) error {
+func FinalCityMapToFile(s *sim.Simulation, outputFilePath string) error {
 	f, err := os.Create(outputFilePath)
 	if err != nil {
 		return err
